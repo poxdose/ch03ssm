@@ -15,6 +15,7 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     public UserMapper getUserMapper() {
+
         return userMapper;
     }
 
