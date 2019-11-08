@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+">
+    <context:component-scan base-package="com.qf"></context:component-scan>
+    <!--mybatis相关配置 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+        <property name="user" value="root"></property>
+        <property name="password" value="123123"></property>
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/student?characterEncoding=utf-8"></property>
+    </bean>
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="mapperLocations" value="classpath:com/qf/mapper/*.xml"></property>
+        <property name="typeAliasesPackage" value="com.qf.pojo"></property>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+        <property name="basePackage" value="com.qf.mapper"></property>
+    </bean>
+
+    <bean id="engineConfiguration" class="org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="databaseSchemaUpdate" value="true"></property>
+    </bean>
+    <bean class="org.activiti.spring.ProcessEngineFactoryBean" id="processEngine">
+        <property name="processEngineConfiguration" ref="engineConfiguration"></property>
+    </bean>
+    <bean id="repositoryService" factory-bean="processEngine" factory-method="getRepositoryService"></bean>
+    <bean id="runtimeService" factory-bean="processEngine" factory-method="getRuntimeService"></bean>
+    <bean id="taskService" factory-bean="processEngine" factory-method="getTaskService"></bean>
+    <bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService"></bean>
+
+</beans>

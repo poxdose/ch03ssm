@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.mapper.HolidayMapper">
+    <insert id="addHoliday" parameterType="holiday" useGeneratedKeys="true" keyProperty="hid">
+        insert into holiday(uid,startDate,endDate,reason) values(#{user.uid},#{startDate},#{endDate},#{reason})
+    </insert>
+    <resultMap id="holidayMap" type="holiday">
+        <id property="hid" column="hid"></id>
+        <result property="startDate" column="startDate"></result>
+        <result property="endDate" column="endDate"></result>
+        <result property="reason" column="reason"></result>
+        <association property="user" javaType="user" column="uid">
+            <id column="uid" property="uid"></id>
+            <result property="uname" column="uname"></result>
+            <result property="upwd" column="upwd"></result>
+        </association>
+    </resultMap>
+
+    <select id="getApproveHolidayList" resultMap="holidayMap">
+        select * from holiday inner join user on user.uid=holiday.uid and
+        hid in
+        <foreach collection="list" item="i" separator="," open="(" close=")">
+            #{i}
+        </foreach>
+    </select>
+
+    <update id="updateHoliday" >
+        update holiday set state=#{arg1} where hid=#{arg0}
+    </update>
+</mapper>

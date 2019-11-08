@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+           version="3.0">
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring-mapper.xml,classpath:spring-service.xml,classpath:spring-shiro.xml</param-value>
+    </context-param>
+    <!-- 容器启动监听器，可以加载额外的配置文件，加载属性contextConfigLocation-->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+		<servlet>
+            <servlet-name>dispatcherServlet</servlet-name>
+            <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+            <init-param>
+                <param-name>contextConfigLocation</param-name>
+                <param-value>classpath:applicationContext.xml</param-value>
+            </init-param>
+        </servlet>   
+    <servlet-mapping>
+        <servlet-name>dispatcherServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+        <filter>
+            <filter-name>characterFilter</filter-name>
+            <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+            <init-param>
+                <param-name>encoding</param-name>
+                <param-value>utf-8</param-value>
+            </init-param>
+        </filter>
+    <filter-mapping>
+        <filter-name>characterFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!-- DelegatingFilterProxy是spring中提供的过滤的代理过滤器，用于代理springXML中配置的第三方组件过滤器
+        由于shiro1.0将所有的配置都交到了springXML中，意味着shiro的过滤器也会配置在springXML，为将来可以过滤请求
+        所以需要在web.xml中配置代理的过滤器
+    -->
+    <filter>
+        <filter-name>shiroFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <!--将被代理的目标过滤器的生命周期都交给spring管理 -->
+        <init-param>
+            <param-name>targetFilterLifecycle</param-name>
+            <param-value>true</param-value>
+        </init-param>
+
+    </filter>
+    <filter-mapping>
+        <filter-name>shiroFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+</web-app>
