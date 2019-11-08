@@ -27,7 +27,7 @@ public class UsersController {
     public String loginPage(){
         return "login";
     }
-
+    //wangzhen3cm
     @RequestMapping("login")
     public String login(String username,String password){
         SecurityUtils.setSecurityManager(securityManager);
