@@ -17,8 +17,8 @@ public class HolidayController {
     private HolidayService holidayService;
 
     public HolidayService getHolidayService() {
-//wangzhen3cm
-        return holidayService;
+//王震是傻屌
+return holidayService;
     }
 
     public void setHolidayService(HolidayService holidayService) {
